@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>志愿者签到系统 - 主页面</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>功能大厅</h1>
+        <div class="dashboard">
+            <div class="card">
+                <h3>举办活动</h3>
+                <p>点击此处创建新的志愿活动</p>
+                <a href="{{ url_for('create_event', user_id=user_id) }}" class="btn">创建活动</a>
+            </div>
+            <div class="card">
+                <h3>志愿签到</h3>
+                <p>点击此处进行志愿签到</p>
+                <a href="{{ url_for('signin_page', user_id=user_id, event_id=1) }}" class="btn">签到</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

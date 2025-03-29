@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>志愿者签到系统 - 登录</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.querySelector('form');
+            const nameInput = document.getElementById('name');
+            const phoneInput = document.getElementById('phone');
+            const errorDisplay = document.createElement('p');
+            errorDisplay.id = 'error-display';
+            errorDisplay.style.color = 'red';
+            errorDisplay.style.margin = '10px 0 0 0';
+            loginForm.parentNode.appendChild(errorDisplay);
+
+            loginForm.addEventListener('submit', function(e) {
+                let errorMessage = '';
+                // 验证姓名
+                if (nameInput.value.trim().length < 2) {
+                    errorMessage += '姓名至少需要2个字符。<br>';
+                    nameInput.style.borderColor = 'red';
+                } else {
+                    nameInput.style.borderColor = '#ddd';
+                }
+
+                // 验证电话号码
+                if (phoneInput.value.trim().length !== 11) {
+                    errorMessage += '电话号码必须是11位。<br>';
+                    phoneInput.style.borderColor = 'red';
+                } else {
+                    phoneInput.style.borderColor = '#ddd';
+                }
+
+                if (errorMessage) {
+                    e.preventDefault();
+                    errorDisplay.innerHTML = errorMessage;
+                } else {
+                    errorDisplay.innerHTML = '';
+                }
+            });
+
+            // 监听输入事件，实时验证
+            nameInput.addEventListener('input', function() {
+                if (this.value.trim().length < 2) {
+                    this.style.borderColor = 'red';
+                } else {
+                    this.style.borderColor = '#ddd';
+                }
+            });
+
+            phoneInput.addEventListener('input', function() {
+                if (this.value.trim().length !== 11) {
+                    this.style.borderColor = 'red';
+                } else {
+                    this.style.borderColor = '#ddd';
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>志愿者签到系统</h1>
+        <div class="login-box">
+            <h2>登录</h2>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <p style="color: red;">{{ message }}</p>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <form action="{{ url_for('login') }}" method="post">
+                <div class="form-group">
+                    <label for="name">姓名:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">电话号码:</label>
+                    <input type="text" id="phone" name="phone" required>
+                </div>
+                <button type="submit" class="btn">登录</button>
+            </form>
+            <p>没有账号？ <a href="{{ url_for('register') }}">立即注册</a></p>
+        </div>
+    </div>
+</body>
+</html>

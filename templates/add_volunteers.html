@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>志愿者签到系统 - 添加志愿者</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 动态添加志愿者输入框
+            const addVolunteerBtn = document.getElementById('add-volunteer');
+            const volunteersContainer = document.getElementById('volunteers-container');
+
+            addVolunteerBtn.addEventListener('click', function() {
+                const newVolunteer = document.createElement('div');
+                newVolunteer.className = 'form-group';
+                newVolunteer.innerHTML = `
+                    <label>志愿者姓名:</label>
+                    <input type="text" name="volunteer_name[]" required>
+                    <label>志愿者电话:</label>
+                    <input type="text" name="volunteer_phone[]" required>
+                `;
+                volunteersContainer.appendChild(newVolunteer);
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>添加志愿者人员</h1>
+        <form action="{{ url_for('add_volunteers', user_id=user_id, event_id=event_id) }}" method="post">
+            <div id="volunteers-container">
+                <div class="form-group">
+                    <label>志愿者姓名:</label>
+                    <input type="text" name="volunteer_name[]" required>
+                    <label>志愿者电话:</label>
+                    <input type="text" name="volunteer_phone[]" required>
+                </div>
+            </div>
+            <button type="button" id="add-volunteer" class="btn">添加更多人员</button>
+            <button type="submit" class="btn">保存</button>
+        </form>
+        <a href="{{ url_for('dashboard', user_id=user_id) }}" class="btn btn-secondary">返回主页面</a>
+    </div>
+</body>
+</html>

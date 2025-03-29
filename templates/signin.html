@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>志愿者签到系统 - 签到</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const signinForm = document.querySelector('form');
+            const nameInput = document.getElementById('signin_name');
+            const phoneInput = document.getElementById('signin_phone');
+            const errorDisplay = document.createElement('p');
+            errorDisplay.id = 'error-display';
+            errorDisplay.style.color = 'red';
+            errorDisplay.style.margin = '10px 0 0 0';
+            signinForm.parentNode.appendChild(errorDisplay);
+
+            let timerInterval;
+            let startTime;
+
+            signinForm.addEventListener('submit', function(e) {
+                let errorMessage = '';
+                // 验证姓名
+                if (nameInput.value.trim().length < 2) {
+                    errorMessage += '姓名至少需要2个字符。<br>';
+                    nameInput.style.borderColor = 'red';
+                } else {
+                    nameInput.style.borderColor = '#ddd';
+                }
+
+                // 验证电话号码
+                if (phoneInput.value.trim().length !== 11) {
+                    errorMessage += '电话号码必须是11位。<br>';
+                    phoneInput.style.borderColor = 'red';
+                } else {
+                    phoneInput.style.borderColor = '#ddd';
+                }
+
+                if (errorMessage) {
+                    e.preventDefault();
+                    errorDisplay.innerHTML = errorMessage;
+                } else {
+                    errorDisplay.innerHTML = '';
+                    e.preventDefault();
+                    startTimer();
+                }
+            });
+
+            function startTimer() {
+                const timerContainer = document.createElement('div');
+                timerContainer.className = 'form-group';
+                timerContainer.innerHTML = `
+                    <label>计时器:</label>
+                    <div id="timer-display">00:00:00</div>
+                    <button type="button" id="end-timer" class="btn">结束签到</button>
+                `;
+                signinForm.parentNode.appendChild(timerContainer);
+
+                startTime = new Date();
+                updateTimerDisplay();
+
+                timerInterval = setInterval(updateTimerDisplay, 1000);
+
+                document.getElementById('end-timer').addEventListener('click', function() {
+                    clearInterval(timerInterval);
+                    const endTime = new Date();
+                    const duration = Math.floor((endTime - startTime) / 1000); // 秒数
+                    saveDurationToDatabase(duration);
+                });
+            }
+
+            function updateTimerDisplay() {
+                const currentTime = new Date();
+                const elapsedTime = Math.floor((currentTime - startTime) / 1000);
+                const hours = Math.floor(elapsedTime / 3600);
+                const minutes = Math.floor((elapsedTime % 3600) / 60);
+                const seconds = elapsedTime % 60;
+
+                document.getElementById('timer-display').textContent =
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+
+            function saveDurationToDatabase(duration) {
+                constsigninName = nameInput.value;
+                const signinPhone = phoneInput.value;
+                const userId = {{ user_id }};
+                const eventId = {{ event_id }};
+
+                fetch(`/end_signin/${userId}/${eventId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: signinName,
+                        phone: signinPhone,
+                        duration: duration
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    // 刷新页面或跳转到其他页面
+                    window.location.href = "{{ url_for('dashboard', user_id=user_id) }}";
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+
+            // 监听输入事件，实时验证
+            nameInput.addEventListener('input', function() {
+                if (this.value.trim().length < 2) {
+                    this.style.borderColor = 'red';
+                } else {
+                    this.style.borderColor = '#ddd';
+                }
+            });
+
+            phoneInput.addEventListener('input', function() {
+                if (this.value.trim().length !== 11) {
+                    this.style.borderColor = 'red';
+                } else {
+                    this.style.borderColor = '#ddd';
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>志愿签到</h1>
+        <form action="{{ url_for('process_signin', user_id=user_id, event_id=event_id) }}" method="post">
+            <div class="form-group">
+                <label for="signin_name">姓名:</label>
+                <input type="text" id="signin_name" name="signin_name" required>
+            </div>
+            <div class="form-group">
+                <label for="signin_phone">电话:</label>
+                <input type="text" id="signin_phone" name="signin_phone" required>
+            </div>
+            <button type="submit" class="btn">确认签到</button>
+        </form>
+        <a href="{{ url_for('dashboard', user_id=user_id) }}" class="btn btn-secondary">返回主页面</a>
+    </div>
+</body>
+</html>

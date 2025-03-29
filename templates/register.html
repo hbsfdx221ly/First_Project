@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>志愿者签到系统 - 注册</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>志愿者签到系统</h1>
+        <div class="login-box">
+            <h2>注册</h2>
+            <form action="{{ url_for('register') }}" method="post">
+                <div class="form-group">
+                    <label for="name">姓名:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">电话:</label>
+                    <input type="text" id="phone" name="phone" required>
+                </div>
+                <button type="submit" class="btn">注册</button>
+            </form>
+            <p>已有账号？ <a href="{{ url_for('index') }}">直接登录</a></p>
+        </div>
+    </div>
+</body>
+</html>

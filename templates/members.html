@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>志愿者签到系统 - 活动成员</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>活动成员列表</h1>
+        <table class="members-table">
+            <thead>
+                <tr>
+                    <th>成员ID</th>
+                    <th>姓名</th>
+                    <th>电话</th>
+                    <th>加入时间</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for member in members %}
+                <tr>
+                    <td>{{ member.id }}</td>
+                    <td>{{ member.name }}</td>
+                    <td>{{ member.phone }}</td>
+                    <td>{{ member.added_at }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <!-- 添加新成员按钮 -->
+        <a href="{{ url_for('add_member_page', user_id=user_id, event_id=event_id) }}" class="btn">添加新成员</a>
+        <a href="{{ url_for('dashboard', user_id=user_id) }}" class="btn btn-secondary">返回主页面</a>
+    </div>
+</body>
+</html>

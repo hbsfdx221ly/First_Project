@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>志愿者签到系统 - 创建活动</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>创建新活动</h1>
+        <form action="{{ url_for('create_event_submit', user_id=user_id) }}" method="post">
+            <div class="form-group">
+                <label for="event_name">活动名称:</label>
+                <input type="text" id="event_name" name="event_name" required>
+            </div>
+            <button type="submit" class="btn">创建活动</button>
+        </form>
+        <a href="{{ url_for('dashboard', user_id=user_id) }}" class="btn btn-secondary">返回主页面</a>
+    </div>
+</body>
+</html>
